@@ -20,6 +20,8 @@ class Config(object):
     BLOGGING_PLUGINS = None
     BLOGGING_ALLOW_FILE_UPLOAD = True
     BLOGGING_ESCAPE_MARKDOWN = False
+    ISSO_CONFIG_PATH = os.environ.get('ISSO_CONFIG_PATH_TEST') or '/var/lib/config/isso.cfg'
+    COMMENTS_DB_PATH = os.environ.get('COMMENTS_DB_PATH_TEST') or '/var/lib/db/comments.db'
     PREFERRED_URL_SCHEME = 'https'
     SCHEDULER_BASE = datetime.now() + timedelta(minutes=1)
     SCHEDULER_HOUR = SCHEDULER_BASE.hour
