@@ -71,16 +71,7 @@ def index():
         post=post,
         meta=meta
     )
-    return render_template(
-        'main/homepage.html',
-        post=post,
-        config=config,
-        meta=meta
-    )
 
-
-@bp.route('/support')
-def support():
     # displays priving page
     # also sets default pricing if none exists
     if PriceLevel.query.all() == []:
@@ -109,8 +100,12 @@ def support():
     square = Square.query.first()
     price_levels = PriceLevel.query.all()
     price_levels.sort(key=lambda x: x.price, reverse=False)
+
     return render_template(
-        'main/support.html',
+        'main/homepage.html',
+        post=post,
+        config=config,
+        meta=meta,
         levels=price_levels,
         square=square,
         numbers=numbers
@@ -125,7 +120,7 @@ def credit_card():
     currency = request.args.get('currency') or 'USD'
     if price is None:
         flash('There was an error. Try again.')
-        return redirect(url_for('main.support'))
+        return redirect(url_for('main.index'))
     square = Square.query.first()
     if square is not None:
         return render_template(
@@ -156,17 +151,17 @@ def create_invoice():
                 price_level = PriceLevel.query.filter_by(
                     name=current_plan).first()
                 if price_level is None:
-                    return redirect(url_for('main.support'))
+                    return redirect(url_for('main.index'))
                 else:
                     plan = price_level.name
                     price = price_level.price
                     currency = price_level.currency or 'USD'
             else:
-                return redirect(url_for('main.support'))
+                return redirect(url_for('main.index'))
     else:
         string_price = request.args.get('price')
         if string_price is None:
-            return redirect(url_for('main.support'))
+            return redirect(url_for('main.index'))
         plan = request.args.get('name')
         price = int(string_price)
         currency = request.args.get('currency')
@@ -174,9 +169,9 @@ def create_invoice():
             currency = 'USD'
         compare = PriceLevel.query.filter_by(price=price).first()
         if compare is None:
-            return redirect(url_for('main.support'))
+            return redirect(url_for('main.index'))
         elif compare.name != plan:
-            return redirect(url_for('main.support'))
+            return redirect(url_for('main.index'))
     btc_client_store = BTCPayClientStore.query.first()
     if btc_client_store is None:
         current_app.logger.critical(

@@ -107,7 +107,7 @@ def process_square(price, currency):
     except Exception as e:
         flash('Card could not be processed.')
         current_app.logger.error(e, exc_info=True)
-        return redirect(url_for('main.support'))
+        return redirect(url_for('main.index'))
     customer = customer_res.customer
     if customer is None:
         flash('Card could not be processed.')
@@ -117,7 +117,7 @@ def process_square(price, currency):
             {customer_res.errors}
             '''
         )
-        return redirect(url_for('main.support'))
+        return redirect(url_for('main.index'))
     else:
         customer_card_request = CreateCustomerCardRequest(
             card_nonce=nonce,
@@ -130,7 +130,7 @@ def process_square(price, currency):
         except Exception as e:
             flash('Card could not be processed.')
             current_app.logger.error(e, exc_info=True)
-            return redirect(url_for('main.support'))
+            return redirect(url_for('main.index'))
         card = card_res.card
         if card is None:
             flash('Card could not be processed.')
@@ -140,7 +140,7 @@ def process_square(price, currency):
                 {card_res.errors}
                 '''
             )
-            return redirect(url_for('main.support'))
+            return redirect(url_for('main.index'))
         else:
             current_user.square_id = customer.id
             current_user.square_card = card.id
@@ -161,7 +161,7 @@ def process_square(price, currency):
     except Exception as e:
         flash('Card could not be processed.')
         current_app.logger.error(e, exc_info=True)
-        return redirect(url_for('main.support'))
+        return redirect(url_for('main.index'))
     transaction = charge_response.transaction
     if transaction is None:
         flash('Card could not be processed.')
@@ -171,7 +171,7 @@ def process_square(price, currency):
             {charge_response.errors}
             '''
         )
-        return redirect(url_for('main.support'))
+        return redirect(url_for('main.index'))
     elif transaction.id is not None:
         flash('Subscription Updated')
         if current_user.expiration <= datetime.today():

@@ -89,7 +89,7 @@ def send_failed_emails(app, failed_list, declined_list):
     with app.app_context():
         mail = Email.query.first()
         site = app.config['BLOGGING_SITENAME']
-        url = url_for('main.support')
+        url = url_for('main.index')
         with mail.connect() as conn:
             for user in failed_list:
                 expires = user.expiration.date()

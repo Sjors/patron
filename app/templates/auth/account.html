@@ -9,7 +9,7 @@
     {% else %}
     <p>Your card on file will be automatically charged on your expiration date.</p>
     {% endif %}
-    <a href="{{ url_for('main.support') }}" class="btn btn-primary">Make a Payment or Change Plans</a>
+    <a href="{{ url_for('main.index') }}" class="btn btn-primary">Make a Payment or Change Plans</a>
     {% if square %}
     <a href="{{ url_for('auth.cancel_square') }}" class="btn btn-primary">Cancel Credit Card Billing</a>
     {% endif %}
