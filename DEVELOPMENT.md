@@ -13,7 +13,7 @@ Install Python dependencies:
 ```sh
 pip3 install flask flask_admin flask_apscheduler flask_login flask_principal flask_fileupload flask_bootstrap flask_migrate flask_ezmail
 pip3 install gunicorn apscheduler sqlalchemy
-pip3 install markdown python-slugify jwt psutil
+pip3 install markdown python-slugify jwt psutil babel
 pip3 install btcpay
 pip3 install squareconnect
 ```
