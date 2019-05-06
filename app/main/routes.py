@@ -9,7 +9,7 @@ from flask_blogging_patron import PostProcessor
 from flask_blogging_patron.views import page_by_id_fetched,\
         page_by_id_processed
 from flask_login import current_user, login_required
-
+from datetime import date
 
 @bp.route('/')
 @bp.route('/index')
@@ -21,6 +21,9 @@ def index():
     is viewable by all visitiors.
     '''
     try:
+        current_plan = None
+        if current_user.is_authenticated:
+            current_plan = current_user.role
         posts = blog_engine.storage.get_posts(
             count=1,
             recent=True,
@@ -108,7 +111,10 @@ def index():
         meta=meta,
         levels=price_levels,
         square=square,
-        numbers=numbers
+        numbers=numbers,
+        current_plan=current_plan,
+        current_user=current_user,
+        date=date
     )
 
 

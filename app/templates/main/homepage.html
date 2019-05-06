@@ -39,16 +39,49 @@
 <div class="container">
     <div class="card-deck mb-3 text-center">
         {% for level in levels %}
-             <div class="card mb-4 shadow-sm" style="min-width: 18rem;">
-             <div class="card-header">
-               <h4 class="my-0 font-weight-normal">{{ level.name }}</h4>
-             </div>
+             <div class="card mb-4 shadow-sm {{ 'border-primary' if current_plan == level.name else '' }}" style="min-width: 18rem;">
+                 <div class="card-header">
+                   <h4 class="my-0 font-weight-normal">{{ level.name }}</h4>
+                 </div>
              <div class="card-body">
                <h1 class="card-title pricing-card-title">{{ numbers.format_currency(level.price, level.currency, locale='en') }} <small class="text-muted">/ mo</small></h1>
                <p>{{ level.description }}</p>
-               <p><a class="btn btn-primary" href="{{ url_for('main.create_invoice', name=level.name, price=level.price, currency=level.currency) }}">Subscribe (Bitcoin)</a></p>
-               {%if square %}
-               <p><a class="btn btn-primary" href="{{ url_for('main.credit_card', name=level.name, price=level.price, currency=level.currency) }}">Subscribe (Fiat)</a></p>
+               {% if current_plan == None or (current_plan == level.name and current_user.expiration.date() < date.today()) %}
+                    {% if current_plan == level.name %}
+                        <p>
+                            Expired {{ current_user.expiration.date() }}
+                        </p>
+                    {% endif %}
+
+                   <p><a class="btn btn-primary" href="{{ url_for('main.create_invoice', name=level.name, price=level.price, currency=level.currency) }}">
+                       {% if current_plan == level.name %}
+                           Renew (Bitcoin)
+                       {% else %}
+                           Subscribe (Bitcoin)
+                       {% endif %}
+                   </a></p>
+                   {%if square %}
+                   <p><a class="btn btn-primary" href="{{ url_for('main.credit_card', name=level.name, price=level.price, currency=level.currency) }}">
+                       {% if current_plan == level.name %}
+                           Renew (Fiat)
+                       {% else %}
+                           Subscribe (Fiat)
+                       {% endif %}
+                   </a></p>
+                   {% endif %}
+               {% elif current_plan == level.name %}
+                   <p>
+                       Paid until {{ current_user.expiration.date() }}
+                   </p>
+               {% else %}
+                 <p>
+                     Change to this plan (
+                     <a href="{{ url_for('main.create_invoice', name=level.name, price=level.price, currency=level.currency) }}">BTC</a>
+                     {%if square %}
+                     or <a href="{{ url_for('main.credit_card', name=level.name, price=level.price, currency=level.currency) }}">fiat</a>
+                     {% endif %}
+                     )
+                 </p>
                {% endif %}
              </div>
              </div>
